@@ -1,0 +1,160 @@
+{
+  "1": {
+    "inputs": {
+      "model_name": "General Lite (170 MiB)",
+      "device": "AUTO",
+      "dtype": "AUTO"
+    },
+    "class_type": "AutoDownloadBiRefNetModel_SET",
+    "_meta": {
+      "title": "AutoDownloadBiRefNetModel_SET"
+    }
+  },
+  "3": {
+    "inputs": {
+      "images": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "PreviewImage"
+    }
+  },
+  "14": {
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "images": [
+        "53",
+        0
+      ]
+    },
+    "class_type": "RembgByBiRefNet_SET",
+    "_meta": {
+      "title": "RembgByBiRefNet_SET"
+    }
+  },
+  "26": {
+    "inputs": {
+      "destination": [
+        "52",
+        0
+      ],
+      "source": [
+        "48",
+        0
+      ],
+      "mask": [
+        "48",
+        3
+      ],
+      "x": 250,
+      "y": 592,
+      "resize_source": false
+    },
+    "class_type": "ImageCompositeMasked",
+    "_meta": {
+      "title": "ImageCompositeMasked"
+    }
+  },
+  "36": {
+    "inputs": {
+      "mask": [
+        "41",
+        1
+      ]
+    },
+    "class_type": "InvertMask",
+    "_meta": {
+      "title": "InvertMask"
+    }
+  },
+  "37": {
+    "inputs": {
+      "image": [
+        "41",
+        0
+      ],
+      "mask": [
+        "36",
+        0
+      ],
+      "padding": 10
+    },
+    "class_type": "AILab_CropObject",
+    "_meta": {
+      "title": "AILab_CropObject"
+    }
+  },
+  "41": {
+    "inputs": {
+      "image": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "SplitImageWithAlpha",
+    "_meta": {
+      "title": "SplitImageWithAlpha"
+    }
+  },
+  "48": {
+    "inputs": {
+      "image": [
+        "37",
+        0
+      ],
+      "mask": [
+        "37",
+        1
+      ],
+      "width": 740,
+      "height": 1030,
+      "upscale_method": "lanczos",
+      "keep_proportion": "resize",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 1,
+      "device": "cpu"
+    },
+    "class_type": "ImageResizeKJv2",
+    "_meta": {
+      "title": "ImageResizeKJv2"
+    }
+  },
+  "52": {
+    "inputs": {
+      "image": "1.jpg"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "LoadImage"
+    }
+  },
+  "53": {
+    "inputs": {
+      "image": "pasted/image.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "LoadImage"
+    }
+  },
+  "54": {
+    "inputs": {
+      "images": [
+        "26",
+        0
+      ],
+      "filename_prefix": "adnoc_final"
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "SaveImage"
+    }
+  }
+}

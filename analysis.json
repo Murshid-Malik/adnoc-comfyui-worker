@@ -1,0 +1,99 @@
+{
+  "builtInNodes": [
+    {
+      "type": "MarkdownNote"
+    },
+    {
+      "type": "MarkdownNote"
+    },
+    {
+      "type": "MarkdownNote"
+    },
+    {
+      "type": "MarkdownNote"
+    },
+    {
+      "type": "InvertMask"
+    },
+    {
+      "type": "SplitImageWithAlpha"
+    },
+    {
+      "type": "PreviewImage"
+    },
+    {
+      "type": "LoadImage"
+    },
+    {
+      "type": "LoadImage"
+    },
+    {
+      "type": "ImageCompositeMasked"
+    },
+    {
+      "type": "SaveImage"
+    }
+  ],
+  "customNodes": {
+    "remove-background": {
+      "metadata": {
+        "ver": "4a1884d296e39e36c3b6f4c873c08ac9e7ce1294",
+        "auxId": "set-soft/ComfyUI_BiRefNet_SET"
+      },
+      "nodes": [
+        {
+          "type": "AutoDownloadBiRefNetModel_SET"
+        },
+        {
+          "type": "RembgByBiRefNet_SET"
+        }
+      ],
+      "registryStatus": true,
+      "hasPublishedVersions": true,
+      "githubUrl": "https://github.com/set-soft/ComfyUI-RemoveBackground_SET"
+    },
+    "comfyui-rmbg": {
+      "metadata": {
+        "ver": "3.1.0"
+      },
+      "nodes": [
+        {
+          "type": "AILab_CropObject"
+        }
+      ],
+      "registryStatus": true,
+      "hasPublishedVersions": true,
+      "githubUrl": "https://github.com/1038lab/ComfyUI-RMBG"
+    },
+    "comfyui-kjnodes": {
+      "metadata": {
+        "ver": "a3250418d58d81aada1826aecaa4ccfce9963def",
+        "auxId": "kijai/ComfyUI-KJNodes"
+      },
+      "nodes": [
+        {
+          "type": "ImageResizeKJv2"
+        }
+      ],
+      "registryStatus": true,
+      "hasPublishedVersions": true,
+      "githubUrl": "https://github.com/kijai/ComfyUI-KJNodes"
+    }
+  },
+  "models": [],
+  "assets": [
+    {
+      "type": "Image",
+      "filename": "1.jpg",
+      "providedUrl": "https://cool-anteater-319.convex.cloud/api/storage/569d11fe-c000-4f62-897b-5ac30f058c2b"
+    },
+    {
+      "type": "Image",
+      "filename": "pasted/image.png",
+      "providedUrl": "https://cool-anteater-319.convex.cloud/api/storage/1e17ad82-b0f4-4b0c-8cea-9f56f1ad8a04"
+    }
+  ],
+  "issues": [
+    "Version mismatch found for custom node group remove-background."
+  ]
+}
