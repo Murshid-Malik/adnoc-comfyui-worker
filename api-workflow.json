@@ -7,7 +7,7 @@
     },
     "class_type": "AutoDownloadBiRefNetModel_SET",
     "_meta": {
-      "title": "AutoDownloadBiRefNetModel_SET"
+      "title": "Load BiRefNet model by name"
     }
   },
   "3": {
@@ -19,11 +19,13 @@
     },
     "class_type": "PreviewImage",
     "_meta": {
-      "title": "PreviewImage"
+      "title": "Preview Image"
     }
   },
   "14": {
     "inputs": {
+      "batch_size": 1,
+      "out_dtype": "AUTO",
       "model": [
         "1",
         0
@@ -35,11 +37,14 @@
     },
     "class_type": "RembgByBiRefNet_SET",
     "_meta": {
-      "title": "RembgByBiRefNet_SET"
+      "title": "Remove background"
     }
   },
   "26": {
     "inputs": {
+      "x": 250,
+      "y": 592,
+      "resize_source": false,
       "destination": [
         "52",
         0
@@ -51,14 +56,11 @@
       "mask": [
         "48",
         3
-      ],
-      "x": 250,
-      "y": 592,
-      "resize_source": false
+      ]
     },
     "class_type": "ImageCompositeMasked",
     "_meta": {
-      "title": "ImageCompositeMasked"
+      "title": "Image Composite Masked"
     }
   },
   "36": {
@@ -70,11 +72,12 @@
     },
     "class_type": "InvertMask",
     "_meta": {
-      "title": "InvertMask"
+      "title": "Invert Mask"
     }
   },
   "37": {
     "inputs": {
+      "padding": 10,
       "image": [
         "41",
         0
@@ -82,12 +85,11 @@
       "mask": [
         "36",
         0
-      ],
-      "padding": 10
+      ]
     },
     "class_type": "AILab_CropObject",
     "_meta": {
-      "title": "AILab_CropObject"
+      "title": "Crop To Object (RMBG) 🖼️🎭"
     }
   },
   "41": {
@@ -99,19 +101,11 @@
     },
     "class_type": "SplitImageWithAlpha",
     "_meta": {
-      "title": "SplitImageWithAlpha"
+      "title": "Split Image with Alpha"
     }
   },
   "48": {
     "inputs": {
-      "image": [
-        "37",
-        0
-      ],
-      "mask": [
-        "37",
-        1
-      ],
       "width": 740,
       "height": 1030,
       "upscale_method": "lanczos",
@@ -119,11 +113,19 @@
       "pad_color": "0, 0, 0",
       "crop_position": "center",
       "divisible_by": 1,
-      "device": "cpu"
+      "device": "cpu",
+      "image": [
+        "37",
+        0
+      ],
+      "mask": [
+        "37",
+        1
+      ]
     },
     "class_type": "ImageResizeKJv2",
     "_meta": {
-      "title": "ImageResizeKJv2"
+      "title": "Resize Image v2"
     }
   },
   "52": {
@@ -132,7 +134,7 @@
     },
     "class_type": "LoadImage",
     "_meta": {
-      "title": "LoadImage"
+      "title": "Load Image"
     }
   },
   "53": {
@@ -141,20 +143,20 @@
     },
     "class_type": "LoadImage",
     "_meta": {
-      "title": "LoadImage"
+      "title": "Load Image"
     }
   },
   "54": {
     "inputs": {
+      "filename_prefix": "adnoc_final",
       "images": [
         "26",
         0
-      ],
-      "filename_prefix": "adnoc_final"
+      ]
     },
     "class_type": "SaveImage",
     "_meta": {
-      "title": "SaveImage"
+      "title": "Save Image"
     }
   }
 }
