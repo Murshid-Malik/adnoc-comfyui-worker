@@ -1,14 +1,34 @@
-# clean base image containing only comfyui, comfy-cli and comfyui-manager
 FROM runpod/worker-comfyui:5.10.0-base
 
-# install custom nodes into comfyui
-RUN git clone https://github.com/set-soft/ComfyUI-RemoveBackground_SET /comfyui/custom_nodes/ComfyUI-RemoveBackground_SET && cd /comfyui/custom_nodes/ComfyUI-RemoveBackground_SET && (git checkout 4a1884d296e39e36c3b6f4c873c08ac9e7ce1294 2>/dev/null || (git fetch origin 4a1884d296e39e36c3b6f4c873c08ac9e7ce1294 --depth=1 && git checkout 4a1884d296e39e36c3b6f4c873c08ac9e7ce1294) || echo "WARN: commit 4a1884d296e39e36c3b6f4c873c08ac9e7ce1294 unreachable in https://github.com/set-soft/ComfyUI-RemoveBackground_SET, falling back to default branch HEAD")
-RUN comfy node install --exit-on-fail comfyui-rmbg@3.1.0 --mode remote || (echo "WARN: comfyui-rmbg@3.1.0 unavailable in registry, falling back to latest" >&2 && comfy node install --exit-on-fail comfyui-rmbg --mode remote)
-RUN git clone https://github.com/kijai/ComfyUI-KJNodes /comfyui/custom_nodes/ComfyUI-KJNodes && cd /comfyui/custom_nodes/ComfyUI-KJNodes && (git checkout a3250418d58d81aada1826aecaa4ccfce9963def 2>/dev/null || (git fetch origin a3250418d58d81aada1826aecaa4ccfce9963def --depth=1 && git checkout a3250418d58d81aada1826aecaa4ccfce9963def) || echo "WARN: commit a3250418d58d81aada1826aecaa4ccfce9963def unreachable in https://github.com/kijai/ComfyUI-KJNodes, falling back to default branch HEAD")
+# Use the newer commit recorded by the supplied workflow. The older loader
+# metadata points to a schema without 'General Lite (170 MiB)' / AUTO dtype.
+RUN git clone https://github.com/set-soft/ComfyUI-RemoveBackground_SET /comfyui/custom_nodes/ComfyUI-RemoveBackground_SET \
+ && cd /comfyui/custom_nodes/ComfyUI-RemoveBackground_SET \
+ && git checkout 879376ba9dd1aa2b186385ca88eb5f06edd12232
+RUN comfy node install --exit-on-fail comfyui-rmbg@3.1.0 --mode remote
+RUN git clone https://github.com/kijai/ComfyUI-KJNodes /comfyui/custom_nodes/ComfyUI-KJNodes \
+ && cd /comfyui/custom_nodes/ComfyUI-KJNodes \
+ && git checkout a3250418d58d81aada1826aecaa4ccfce9963def
 
-# copy all input data (like images or videos) into comfyui (uncomment and adjust if needed)
-# COPY input/ /comfyui/input/
+# Install into the interpreter used by the inherited worker startup, preserving
+# its installed CUDA torch family and transformers/hub compatibility boundaries.
+RUN /opt/venv/bin/python -m pip freeze | grep -E '^(torch|torchvision|torchaudio)==' > /tmp/adnoc-constraints.txt \
+ && printf 'transformers<5\nhuggingface-hub<1.0\n' >> /tmp/adnoc-constraints.txt \
+ && for dir in ComfyUI-RemoveBackground_SET ComfyUI-RMBG ComfyUI-KJNodes; do \
+      test -f "/comfyui/custom_nodes/$dir/requirements.txt" && \
+      /opt/venv/bin/python -m pip install -c /tmp/adnoc-constraints.txt -r "/comfyui/custom_nodes/$dir/requirements.txt" || exit 1; \
+    done
 
-# user-provided inputs override the auto-generated placeholders above.
-RUN wget --progress=dot:giga -O '/comfyui/input/1.jpg' "https://cool-anteater-319.convex.cloud/api/storage/569d11fe-c000-4f62-897b-5ac30f058c2b"
-RUN wget --progress=dot:giga -O '/comfyui/input/pasted/image.png' "https://cool-anteater-319.convex.cloud/api/storage/1e17ad82-b0f4-4b0c-8cea-9f56f1ad8a04"
+# Match this exact node version's RemBG model cache path and filename.
+RUN mkdir -p /comfyui/models/RemBG \
+ && wget --progress=dot:giga --tries=3 \
+    -O /comfyui/models/RemBG/General-Lite.safetensors \
+    https://huggingface.co/ZhengPeng7/BiRefNet_lite/resolve/main/model.safetensors \
+ && /opt/venv/bin/python -c "from safetensors import safe_open; f=safe_open('/comfyui/models/RemBG/General-Lite.safetensors',framework='pt',device='cpu'); assert len(f.keys()) > 0"
+
+COPY api-workflow.json /adnoc/api-workflow.json
+COPY verify_nodes.py /adnoc/verify_nodes.py
+RUN /opt/venv/bin/python /adnoc/verify_nodes.py
+
+# Inherit /start.sh: starts ComfyUI and the RunPod queue worker.
+# Capture and background images arrive with each request; no sample photos baked in.
