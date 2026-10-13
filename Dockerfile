@@ -15,8 +15,13 @@ RUN git clone https://github.com/kijai/ComfyUI-KJNodes /comfyui/custom_nodes/Com
 RUN /opt/venv/bin/python -m pip freeze | grep -E '^(torch|torchvision|torchaudio)==' > /tmp/adnoc-constraints.txt \
  && printf 'transformers<5\nhuggingface-hub<1.0\n' >> /tmp/adnoc-constraints.txt \
  && for dir in ComfyUI-RemoveBackground_SET ComfyUI-RMBG ComfyUI-KJNodes; do \
-      test -f "/comfyui/custom_nodes/$dir/requirements.txt" && \
-      /opt/venv/bin/python -m pip install -c /tmp/adnoc-constraints.txt -r "/comfyui/custom_nodes/$dir/requirements.txt" || exit 1; \
+      node_dir="$(find /comfyui/custom_nodes -mindepth 1 -maxdepth 1 -type d -iname "$dir")"; \
+      if [ -z "$node_dir" ] || [ ! -f "$node_dir/requirements.txt" ]; then \
+        echo "Missing or ambiguous requirements directory for $dir" >&2; \
+        ls -la /comfyui/custom_nodes; exit 1; \
+      fi; \
+      echo "Installing requirements from $node_dir"; \
+      /opt/venv/bin/python -m pip install -c /tmp/adnoc-constraints.txt -r "$node_dir/requirements.txt" || exit 1; \
     done
 
 # Match this exact node version's RemBG model cache path and filename.
