@@ -8,7 +8,7 @@ RUN git clone https://github.com/set-soft/ComfyUI-RemoveBackground_SET /comfyui/
 RUN comfy node install --exit-on-fail comfyui-rmbg@3.1.0 --mode remote
 RUN git clone https://github.com/kijai/ComfyUI-KJNodes /comfyui/custom_nodes/ComfyUI-KJNodes \
  && cd /comfyui/custom_nodes/ComfyUI-KJNodes \
- && git checkout a3250418d58d81aada1826aecaa4ccfce9963def
+ && git checkout d7641533d6634eb05f8570c980fce8fc8528dc7b
 
 # Install into the interpreter used by the inherited worker startup, preserving
 # its installed CUDA torch family and transformers/hub compatibility boundaries.
